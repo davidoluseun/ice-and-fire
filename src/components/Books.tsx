@@ -4,6 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Header from "./Header";
 import BookLists from "./BookLists";
 import Loading from "./Loading";
+import Error from "./Error";
 import { fetchBooks } from "../utils/fetchBooks";
 import { parseHeaders } from "../utils/parseHeaders";
 
@@ -12,7 +13,10 @@ type BooksState = {
   searchQuery: string;
   nextLoading: boolean;
   initLoading: boolean;
+  initUrl: string;
   nextUrl: string | undefined;
+  initError: boolean;
+  nextError: boolean;
 };
 
 class Books extends React.Component {
@@ -22,15 +26,25 @@ class Books extends React.Component {
     nextLoading: false,
     initLoading: false,
     nextUrl: "",
+    initError: false,
+    nextError: false,
+    initUrl: "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6",
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.setState({ initLoading: true });
-    const url = "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6";
+    this.fetchInitBooks(this.state.initUrl);
+  }
 
+  componentWillUnmount() {
+    this.setState({ nextLoading: false, initLoading: false });
+  }
+
+  fetchInitBooks = async (url: string) => {
     const response = await fetchBooks(url);
 
-    if (!response) return this.setState({ initLoading: false });
+    if (!response)
+      return this.setState({ initLoading: false, initError: true });
 
     const headerLinks = parseHeaders(response);
     const data = await response.json();
@@ -39,18 +53,13 @@ class Books extends React.Component {
       books: data,
       initLoading: false,
     });
-  }
-
-  componentWillUnmount() {
-    this.setState({ nextLoading: false, initLoading: false });
-  }
+  };
 
   fetchNextBooks = async (url: string) => {
-    this.setState({ nextLoading: true });
-
     const response = await fetchBooks(url);
 
-    if (!response) return this.setState({ nextLoading: false });
+    if (!response)
+      return this.setState({ nextLoading: false, nextError: true });
 
     const headerLinks = parseHeaders(response);
     const data = await response.json();
@@ -64,6 +73,19 @@ class Books extends React.Component {
 
   handleFetchNextBooks = () => {
     if (this.state.nextUrl) {
+      this.setState({ nextLoading: true });
+      this.fetchNextBooks(this.state.nextUrl);
+    }
+  };
+
+  handleInitTryAgain = () => {
+    this.setState({ initLoading: true, initError: false });
+    this.fetchInitBooks(this.state.initUrl);
+  };
+
+  handleNextTryAgain = () => {
+    if (this.state.nextUrl) {
+      this.setState({ nextLoading: true, nextError: false });
       this.fetchNextBooks(this.state.nextUrl);
     }
   };
@@ -78,6 +100,7 @@ class Books extends React.Component {
 
   render() {
     const { books, searchQuery, nextUrl, initLoading } = this.state;
+    const { initError, nextError } = this.state;
 
     return (
       <Box
@@ -88,24 +111,35 @@ class Books extends React.Component {
         px={{ base: "4", md: "6" }}
       >
         {initLoading && <Loading />}
-        <Box>
-          {books.length > 0 && (
-            <Header
-              searchQuery={searchQuery}
-              handleSearch={this.handleSearch}
-              handleFilter={this.handleFilter}
-            />
-          )}
+        {initError ? (
+          <Error
+            diffText={"connect to the API endpoint"}
+            onTryAgain={this.handleInitTryAgain}
+          />
+        ) : (
+          <Box>
+            {books.length > 0 && (
+              <Header
+                searchQuery={searchQuery}
+                handleSearch={this.handleSearch}
+                handleFilter={this.handleFilter}
+              />
+            )}
 
-          <InfiniteScroll
-            dataLength={books.length}
-            next={this.handleFetchNextBooks}
-            hasMore={nextUrl ? true : false}
-            loader={<Loading />}
-          >
-            <BookLists books={books} />
-          </InfiniteScroll>
-        </Box>
+            <InfiniteScroll
+              dataLength={books.length}
+              next={this.handleFetchNextBooks}
+              hasMore={nextUrl ? true : false}
+              loader={!nextError && <Loading />}
+            >
+              <BookLists
+                books={books}
+                onTryAgain={this.handleNextTryAgain}
+                nextError={nextError}
+              />
+            </InfiniteScroll>
+          </Box>
+        )}
       </Box>
     );
   }
