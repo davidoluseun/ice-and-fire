@@ -4,11 +4,13 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Header from "./Header";
 import BookLists from "./BookLists";
 import Loading from "./Loading";
+import { fetchBooks } from "../utils/fetchBooks";
 
 type BooksState = {
   books: BookTypes[];
   searchQuery: string;
-  isLoading: boolean;
+  nextLoading: boolean;
+  initLoading: boolean;
   nextUrl: string | undefined;
 };
 
@@ -16,7 +18,8 @@ class Books extends React.Component {
   state: BooksState = {
     books: [],
     searchQuery: "",
-    isLoading: false,
+    nextLoading: false,
+    initLoading: false,
     nextUrl: "",
   };
 
@@ -34,46 +37,42 @@ class Books extends React.Component {
       }, {});
   };
 
-  componentDidMount() {
-    this.setState({ isLoading: true });
-    let url = "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6";
+  async componentDidMount() {
+    this.setState({ initLoading: true });
+    const url = "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6";
 
-    fetch(url)
-      .then((response) => {
-        const headerLinks = this.parseHeaders(response);
-        this.setState({ nextUrl: headerLinks.next });
-        return response.json();
-      })
-      .then((data) => {
-        this.setState({ books: data, isLoading: false });
-      })
-      .catch((error) => {
-        this.setState({ isLoading: false });
-      });
+    const response = await fetchBooks(url);
+
+    if (!response) return this.setState({ initLoading: false });
+
+    const headerLinks = this.parseHeaders(response);
+    const data = await response.json();
+    this.setState({
+      nextUrl: headerLinks.next,
+      books: data,
+      initLoading: false,
+    });
   }
 
   componentWillUnmount() {
-    this.setState({ isLoading: false });
+    this.setState({ nextLoading: false, initLoading: false });
   }
 
-  fetchNextBooks = (url: string) => {
-    this.setState({ isLoading: true });
+  fetchNextBooks = async (url: string) => {
+    this.setState({ nextLoading: true });
 
-    fetch(url)
-      .then((response) => {
-        const headerLinks = this.parseHeaders(response);
-        this.setState({ nextUrl: headerLinks.next });
-        return response.json();
-      })
-      .then((data) => {
-        this.setState({
-          books: this.state.books.concat(data),
-          isLoading: false,
-        });
-      })
-      .catch((error) => {
-        this.setState({ isLoading: false });
-      });
+    const response = await fetchBooks(url);
+
+    if (!response) return this.setState({ nextLoading: false });
+
+    const headerLinks = this.parseHeaders(response);
+    const data = await response.json();
+
+    this.setState({
+      nextUrl: headerLinks.next,
+      books: this.state.books.concat(data),
+      nextLoading: false,
+    });
   };
 
   handleSearch = (query: string) => {
@@ -91,7 +90,7 @@ class Books extends React.Component {
   };
 
   render() {
-    const { books, searchQuery, nextUrl } = this.state;
+    const { books, searchQuery, nextUrl, initLoading } = this.state;
 
     return (
       <Box
@@ -101,6 +100,7 @@ class Books extends React.Component {
         maxW="1200px"
         px={{ base: "4", md: "6" }}
       >
+        {initLoading && <Loading />}
         <Box>
           <Header
             books={books}
