@@ -89,12 +89,13 @@ class Books extends React.Component {
       >
         {initLoading && <Loading />}
         <Box>
-          <Header
-            books={books}
-            searchQuery={searchQuery}
-            handleSearch={this.handleSearch}
-            handleFilter={this.handleFilter}
-          />
+          {books.length > 0 && (
+            <Header
+              searchQuery={searchQuery}
+              handleSearch={this.handleSearch}
+              handleFilter={this.handleFilter}
+            />
+          )}
 
           <InfiniteScroll
             dataLength={books.length}
