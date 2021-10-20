@@ -75,18 +75,18 @@ class Books extends React.Component {
     });
   };
 
+  handleFetchNextBooks = () => {
+    if (this.state.nextUrl) {
+      this.fetchNextBooks(this.state.nextUrl);
+    }
+  };
+
   handleSearch = (query: string) => {
     this.setState({ searchQuery: query });
   };
 
   handleFilter = (filter: string) => {
     console.log(filter);
-  };
-
-  handleFetchNextBooks = () => {
-    if (this.state.nextUrl) {
-      this.fetchNextBooks(this.state.nextUrl);
-    }
   };
 
   render() {
