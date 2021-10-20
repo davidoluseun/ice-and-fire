@@ -5,6 +5,7 @@ import Header from "./Header";
 import BookLists from "./BookLists";
 import Loading from "./Loading";
 import { fetchBooks } from "../utils/fetchBooks";
+import { parseHeaders } from "../utils/parseHeaders";
 
 type BooksState = {
   books: BookTypes[];
@@ -23,20 +24,6 @@ class Books extends React.Component {
     nextUrl: "",
   };
 
-  parseHeaders = (res: Response) => {
-    return res.headers
-      .get("link")
-      ?.split(",")
-      .reduce((acc: any, link) => {
-        const resReg = /^\<(.+)\>; rel="(.+)"$/.exec(link.trim());
-
-        if (!resReg) return acc;
-
-        acc[resReg[2]] = resReg[1];
-        return acc;
-      }, {});
-  };
-
   async componentDidMount() {
     this.setState({ initLoading: true });
     const url = "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6";
@@ -45,7 +32,7 @@ class Books extends React.Component {
 
     if (!response) return this.setState({ initLoading: false });
 
-    const headerLinks = this.parseHeaders(response);
+    const headerLinks = parseHeaders(response);
     const data = await response.json();
     this.setState({
       nextUrl: headerLinks.next,
@@ -65,7 +52,7 @@ class Books extends React.Component {
 
     if (!response) return this.setState({ nextLoading: false });
 
-    const headerLinks = this.parseHeaders(response);
+    const headerLinks = parseHeaders(response);
     const data = await response.json();
 
     this.setState({
