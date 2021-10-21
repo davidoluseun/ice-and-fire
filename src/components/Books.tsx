@@ -41,34 +41,35 @@ class Books extends React.Component {
   }
 
   fetchInitBooks = async (url: string) => {
-    const response = await fetchBooks(url);
+    try {
+      const response = await fetchBooks(url);
+      const headerLinks = parseHeaders(response);
+      const data = await response.json();
 
-    if (!response)
-      return this.setState({ initLoading: false, initError: true });
-
-    const headerLinks = parseHeaders(response);
-    const data = await response.json();
-    this.setState({
-      nextUrl: headerLinks.next,
-      books: data,
-      initLoading: false,
-    });
+      this.setState({
+        nextUrl: headerLinks.next,
+        books: data,
+        initLoading: false,
+      });
+    } catch (error) {
+      this.setState({ initLoading: false, initError: true });
+    }
   };
 
   fetchNextBooks = async (url: string) => {
-    const response = await fetchBooks(url);
+    try {
+      const response = await fetchBooks(url);
+      const headerLinks = parseHeaders(response);
+      const data = await response.json();
 
-    if (!response)
-      return this.setState({ nextLoading: false, nextError: true });
-
-    const headerLinks = parseHeaders(response);
-    const data = await response.json();
-
-    this.setState({
-      nextUrl: headerLinks.next,
-      books: this.state.books.concat(data),
-      nextLoading: false,
-    });
+      this.setState({
+        nextUrl: headerLinks.next,
+        books: this.state.books.concat(data),
+        nextLoading: false,
+      });
+    } catch (error) {
+      this.setState({ nextLoading: false, nextError: true });
+    }
   };
 
   handleFetchNextBooks = () => {
