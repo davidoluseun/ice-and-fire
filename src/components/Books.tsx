@@ -4,6 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Header from "./Header";
 import BookLists from "./BookLists";
 import Loading from "./Loading";
+import InitLoading from "./InitLoading";
 import Error from "./Error";
 import { fetchBooks } from "../utils/fetchBooks";
 import { parseHeaders } from "../utils/parseHeaders";
@@ -111,7 +112,7 @@ class Books extends React.Component {
         maxW="1200px"
         px={{ base: "4", md: "6" }}
       >
-        {initLoading && <Loading />}
+        {initLoading && <InitLoading />}
         {initError ? (
           <Error
             diffText={"connect to the API endpoint"}

@@ -27,25 +27,32 @@ const BookLists = ({ books, onTryAgain, nextError }: BookListsProps) => {
               p="4"
               bg="#fff"
               borderRadius="md"
+              data-testid="book"
               boxShadow="0px 0px 2px rgba(0, 0, 0, .2)"
             >
               <Flex p="2px">
                 <Box fontWeight="semibold" flexBasis="38%">
                   Publisher:
                 </Box>
-                <Box flexBasis="62%">{book.publisher}</Box>
+                <Box data-testid="publisher" flexBasis="62%">
+                  {book.publisher}
+                </Box>
               </Flex>
               <Flex p="2px">
                 <Box fontWeight="semibold" flexBasis="38%">
                   Name:
                 </Box>
-                <Box flexBasis="62%">{book.name}</Box>
+                <Box data-testid="name" flexBasis="62%">
+                  {book.name}
+                </Box>
               </Flex>
               <Flex p="2px">
                 <Box fontWeight="semibold" flexBasis="38%">
                   ISBN:
                 </Box>
-                <Box flexBasis="62%">{book.isbn}</Box>
+                <Box data-testid="isbn" flexBasis="62%">
+                  {book.isbn}
+                </Box>
               </Flex>
               <Flex p="2px">
                 <Box fontWeight="semibold" flexBasis="38%">
@@ -55,12 +62,26 @@ const BookLists = ({ books, onTryAgain, nextError }: BookListsProps) => {
                 <Box flexBasis="62%">
                   {book.authors.map((author, index) =>
                     index !== book.authors.length - 1 ? (
-                      <Box pr="2" key={book.isbn + author} as="span">
-                        {author},
+                      <Box
+                        data-testid="author"
+                        pr="2"
+                        key={book.isbn + author}
+                        as="span"
+                      >
+                        <Box data-testid="author-name" as="span">
+                          {author},
+                        </Box>
                       </Box>
                     ) : (
-                      <Box pr="2" key={book.isbn + author} as="span">
-                        {author}
+                      <Box
+                        data-testid="author"
+                        pr="2"
+                        key={book.isbn + author}
+                        as="span"
+                      >
+                        <Box data-testid="author-name" as="span">
+                          {author}
+                        </Box>
                       </Box>
                     )
                   )}
@@ -70,7 +91,7 @@ const BookLists = ({ books, onTryAgain, nextError }: BookListsProps) => {
                 <Box fontWeight="semibold" flexBasis="38%">
                   End Date:
                 </Box>
-                <Box flexBasis="62%">
+                <Box data-testid="released" flexBasis="62%">
                   {moment(book.released).format("DD/MM/YYYY")}
                 </Box>
               </Flex>
@@ -78,19 +99,25 @@ const BookLists = ({ books, onTryAgain, nextError }: BookListsProps) => {
                 <Box fontWeight="semibold" flexBasis="38%">
                   Country:
                 </Box>
-                <Box flexBasis="62%">{book.country}</Box>
+                <Box data-testid="country" flexBasis="62%">
+                  {book.country}
+                </Box>
               </Flex>
               <Flex p="2px">
                 <Box fontWeight="semibold" flexBasis="38%">
                   Media Type:
                 </Box>
-                <Box flexBasis="62%">{book.mediaType}</Box>
+                <Box data-testid="media" flexBasis="62%">
+                  {book.mediaType}
+                </Box>
               </Flex>
               <Flex p="2px">
                 <Box fontWeight="semibold" flexBasis="38%">
                   Number of Pages:
                 </Box>
-                <Box flexBasis="62%">{book.numberOfPages}</Box>
+                <Box data-testid="pages" flexBasis="62%">
+                  {book.numberOfPages}
+                </Box>
               </Flex>
             </Box>
           );
