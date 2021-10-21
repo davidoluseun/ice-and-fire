@@ -15,7 +15,6 @@ const initHeaderLink =
 const nextHeaderLink =
   '<https://www.anapioficeandfire.com/api/books?page=1&pageSize=6>; rel="prev", <https://www.anapioficeandfire.com/api/books?page=1&pageSize=6>; rel="first", <https://www.anapioficeandfire.com/api/books?page=2&pageSize=6>; rel="last"';
 
-  
 describe("<App />", () => {
   describe("rendering the list of books available on Ice and Fire API", () => {
     it("should render the first set of books(6)", async () => {
@@ -83,15 +82,15 @@ describe("<App />", () => {
       const response = await fetchBooks(nextUrl);
       await response.json();
 
-      const bookSevenName = "The Mystery Knight";
-      const bookTwelveName = "A Knight of the Seven Kingdoms";
+      const bookSeven = getBooks(7, 1);
+      const bookTwelve = getBooks(12, 1);
 
       expect(getRenderedBooks().length).toBe(6);
       expect(
-        getRenderedBooks().find((book) => book.name === bookSevenName)
+        getRenderedBooks().find((book) => book.name === bookSeven[0].name)
       ).toBeTruthy();
       expect(
-        getRenderedBooks().find((book) => book.name === bookTwelveName)
+        getRenderedBooks().find((book) => book.name === bookTwelve[0].name)
       ).toBeTruthy();
     });
   });
