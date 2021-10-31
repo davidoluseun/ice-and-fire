@@ -1,11 +1,11 @@
 import { Flex, Text, Heading, Button } from "@chakra-ui/react";
 
-type InitialErrorProps = {
+type ErrorProps = {
   onTryAgain: () => void;
   diffText: string;
 };
 
-const InitialError = ({ onTryAgain, diffText }: InitialErrorProps) => {
+const Error = ({ onTryAgain, diffText }: ErrorProps) => {
   return (
     <Flex
       p="4"
@@ -38,4 +38,4 @@ const InitialError = ({ onTryAgain, diffText }: InitialErrorProps) => {
   );
 };
 
-export default InitialError;
+export default Error;

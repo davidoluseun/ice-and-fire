@@ -1,8 +1,19 @@
-type SearchTypes = {
+type BookKeys = keyof BookSearchTypes;
+type CharacterKeys = keyof CharactersSearchTypes;
+
+type CharactersSearchTypes = {
+  name: string;
+  culture: string;
+};
+
+type BookSearchTypes = {
   publisher: string;
   name: string;
   isbn: string;
   released: string;
+  authors: string[];
+  characters: string;
+  culture: string;
 };
 
 type BookTypes = {

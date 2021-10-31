@@ -1,150 +1,119 @@
 import * as React from "react";
 import { Box } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Header from "./Header";
 import BookLists from "./BookLists";
 import Loading from "./Loading";
-import InitLoading from "./InitLoading";
+import InitialLoading from "./InitialLoading";
 import Error from "./Error";
+import { AppContext } from "./AppContext";
 import { fetchBooks } from "../utils/fetchBooks";
 import { parseHeaders } from "../utils/parseHeaders";
+import { fetchCharacters } from "../utils/fetchCharacters";
 
-type BooksState = {
-  books: BookTypes[];
-  searchQuery: string;
-  nextLoading: boolean;
-  initLoading: boolean;
-  initUrl: string;
-  nextUrl: string | undefined;
-  initError: boolean;
-  nextError: boolean;
-};
+const Books = () => {
+  const url = "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6";
 
-class Books extends React.Component {
-  state: BooksState = {
-    books: [],
-    searchQuery: "",
-    nextLoading: false,
-    initLoading: false,
-    nextUrl: "",
-    initError: false,
-    nextError: false,
-    initUrl: "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6",
-  };
+  const { appState, appDispatch } = React.useContext(AppContext);
+  const { books, nextUrl } = appState;
+  const { length: count } = books;
 
-  componentDidMount() {
-    this.setState({ initLoading: true });
-    this.fetchInitBooks(this.state.initUrl);
-  }
+  const [initialLoading, setInitialLoading] = React.useState(false);
+  const [initialError, setInitialError] = React.useState(false);
+  const [, setNextLoading] = React.useState(false);
+  const [nextError, setNextError] = React.useState(false);
+  const [shouldTryAgain, setShouldTryAgain] = React.useState(false);
 
-  componentWillUnmount() {
-    this.setState({ nextLoading: false, initLoading: false });
-  }
+  React.useEffect(() => {
+    const fetchInitBooks = async (url: string) => {
+      setInitialLoading(true);
+      setInitialError(false);
 
-  fetchInitBooks = async (url: string) => {
+      try {
+        const response = await fetchBooks(url);
+        const data = await response.json();
+        const headerLinks = parseHeaders(response);
+
+        const characters = await fetchCharacters();
+
+        const payload = { books: data, nextUrl: headerLinks.next, characters };
+        appDispatch({ type: "FETCH_INIT", payload });
+      } catch (error) {
+        setInitialError(true);
+      }
+
+      setInitialLoading(false);
+      setShouldTryAgain(false);
+    };
+
+    if (count <= 0) {
+      fetchInitBooks(url);
+    }
+  }, [appDispatch, count, shouldTryAgain]);
+
+  const fetchNextBooks = async (url: string) => {
+    setNextLoading(true);
+    setNextError(false);
+
     try {
       const response = await fetchBooks(url);
       const headerLinks = parseHeaders(response);
       const data = await response.json();
 
-      this.setState({
+      const payload = {
+        books: books.concat(data),
         nextUrl: headerLinks.next,
-        books: data,
-        initLoading: false,
-      });
+      };
+      appDispatch({ type: "FETCH_NEXT_BOOKS", payload });
     } catch (error) {
-      this.setState({ initLoading: false, initError: true });
+      setNextError(true);
+    }
+
+    setNextLoading(false);
+  };
+
+  const handleFetchNextBooks = () => {
+    if (nextUrl) {
+      fetchNextBooks(nextUrl);
     }
   };
 
-  fetchNextBooks = async (url: string) => {
-    try {
-      const response = await fetchBooks(url);
-      const headerLinks = parseHeaders(response);
-      const data = await response.json();
-
-      this.setState({
-        nextUrl: headerLinks.next,
-        books: this.state.books.concat(data),
-        nextLoading: false,
-      });
-    } catch (error) {
-      this.setState({ nextLoading: false, nextError: true });
-    }
+  const handleInitialTryAgain = () => {
+    setShouldTryAgain(true);
   };
 
-  handleFetchNextBooks = () => {
-    if (this.state.nextUrl) {
-      this.setState({ nextLoading: true });
-      this.fetchNextBooks(this.state.nextUrl);
-    }
+  const handleNextTryAgain = () => {
+    fetchNextBooks(nextUrl);
   };
 
-  handleInitTryAgain = () => {
-    this.setState({ initLoading: true, initError: false });
-    this.fetchInitBooks(this.state.initUrl);
-  };
-
-  handleNextTryAgain = () => {
-    if (this.state.nextUrl) {
-      this.setState({ nextLoading: true, nextError: false });
-      this.fetchNextBooks(this.state.nextUrl);
-    }
-  };
-
-  handleSearch = (query: string) => {
-    this.setState({ searchQuery: query });
-  };
-
-  handleFilter = (filter: string) => {
-    console.log(filter);
-  };
-
-  render() {
-    const { books, searchQuery, nextUrl, initLoading } = this.state;
-    const { initError, nextError } = this.state;
-
-    return (
-      <Box
-        mt="14"
-        mb="8"
-        marginX="auto"
-        maxW="1200px"
-        px={{ base: "4", md: "6" }}
-      >
-        {initLoading && <InitLoading />}
-        {initError ? (
-          <Error
-            diffText={"connect to the API endpoint"}
-            onTryAgain={this.handleInitTryAgain}
-          />
-        ) : (
-          <Box>
-            {books.length > 0 && (
-              <Header
-                searchQuery={searchQuery}
-                handleSearch={this.handleSearch}
-                handleFilter={this.handleFilter}
-              />
-            )}
-
+  return (
+    <Box my="8" marginX="auto" maxW="1300px" px="4">
+      {initialLoading ? (
+        <InitialLoading />
+      ) : (
+        <>
+          {initialError ? (
+            <Error
+              diffText={"connect to the API endpoint"}
+              onTryAgain={handleInitialTryAgain}
+            />
+          ) : (
             <InfiniteScroll
               dataLength={books.length}
-              next={this.handleFetchNextBooks}
+              next={handleFetchNextBooks}
               hasMore={nextUrl ? true : false}
               loader={!nextError && <Loading />}
             >
               <BookLists
                 books={books}
-                onTryAgain={this.handleNextTryAgain}
+                onTryAgain={handleNextTryAgain}
                 nextError={nextError}
               />
             </InfiniteScroll>
-          </Box>
-        )}
-      </Box>
-    );
-  }
-}
+          )}
+        </>
+      )}
+    </Box>
+  );
+};
 
 export default Books;

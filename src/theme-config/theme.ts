@@ -12,7 +12,7 @@ const styles = {
   global: () => ({
     body: {
       bg: "#f0f2f5",
-      fontSize: "16px",
+      fontSize: "15px",
       color: "#000",
     },
   }),

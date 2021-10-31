@@ -5,28 +5,29 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 
-type SearchProps = {
+type SearchFieldProps = {
   onSearch: (query: string) => void;
   searchValue: string;
 };
 
-const Search = ({ searchValue, onSearch }: SearchProps) => {
+const SearchField = ({ searchValue, onSearch }: SearchFieldProps) => {
   return (
     <FormControl id="search" maxW="300px" mr="4">
       <VisuallyHidden>
         <FormLabel>Search books...</FormLabel>
       </VisuallyHidden>
       <Input
+        value={searchValue}
+        type="search"
+        borderRadius="full"
+        autoComplete="off"
+        placeholder="Search books..."
         onChange={(e) => {
           onSearch(e.currentTarget.value);
         }}
-        value={searchValue}
-        borderRadius="full"
-        type="search"
-        placeholder="Search books..."
       />
     </FormControl>
   );
 };
 
-export default Search;
+export default SearchField;
