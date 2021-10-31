@@ -1,6 +1,6 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { getBooks } from "../fakeServices/fakeBookService";
+import { getBooks } from "../../fakeServices/fakeBookService";
 
 const url = "https://www.anapioficeandfire.com/api/books";
 

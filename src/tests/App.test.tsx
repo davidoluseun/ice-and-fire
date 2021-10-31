@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
-import { server, rest } from "./testServer";
+import { server, rest } from "./utils/testServer";
 import { fetchBooks } from "../utils/fetchBooks";
 import { getBooks } from "../fakeServices/fakeBookService";
 import App from "../App";
