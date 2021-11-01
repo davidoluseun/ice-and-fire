@@ -1,11 +1,15 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { getBooks } from "../../fakeServices/fakeBookService";
+import { getBooks } from "../../fakeServices/makeBooks";
+import { getCharacters } from "../../fakeServices/makeCharacters";
 
-const url = "https://www.anapioficeandfire.com/api/books";
+const baseUrl = "https://www.anapioficeandfire.com/api";
+const bookUrl = `${baseUrl}/books`;
+const characterUrl = `${baseUrl}/characters`;
 
 const server = setupServer(
-  rest.get(url, (req, res, ctx) => res(ctx.json(getBooks()))),
+  rest.get(bookUrl, (req, res, ctx) => res(ctx.json(getBooks()))),
+  rest.get(characterUrl, (req, res, ctx) => res(ctx.json(getCharacters()))),
 
   rest.get("*", (req, res, ctx) => {
     console.error(`Please add a request handler for ${req.url.toString()}`);
