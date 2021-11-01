@@ -1,7 +1,7 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { getBooks } from "../../fakeServices/makeBooks";
-import { getCharacters } from "../../fakeServices/makeCharacters";
+import { getBooks } from "./makeBooks";
+import { getCharacters } from "./makeCharacters";
 
 const baseUrl = "https://www.anapioficeandfire.com/api";
 const bookUrl = `${baseUrl}/books`;

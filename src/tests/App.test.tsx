@@ -3,8 +3,8 @@ import { render, screen, within } from "./utils/custom-render";
 import { server, rest } from "./utils/testServer";
 import { fetchBooks } from "../utils/fetchBooks";
 import { fetchCharacters } from "../utils/fetchCharacters";
-import { getBooks } from "../fakeServices/makeBooks";
-import { getCharacters } from "../fakeServices/makeCharacters";
+import { getBooks } from "./utils/makeBooks";
+import { getCharacters } from "./utils/makeCharacters";
 import { getNextCharactersLink } from "./utils/getNextCharactersLink";
 import App from "../App";
 
