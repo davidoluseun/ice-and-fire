@@ -30,6 +30,7 @@ const SearchResult = ({ queryItems, onClearQuery }: SearchResultProps) => {
       top="65px"
       borderRadius="md"
       position="absolute"
+      data-testid="result-box"
       display={queryItems.length === 0 ? "none" : "block"}
       border=".5px solid rgba(0, 0, 0, .15)"
       boxShadow="0 1px 2px rgba(0, 0, 0, .15)"
@@ -40,6 +41,7 @@ const SearchResult = ({ queryItems, onClearQuery }: SearchResultProps) => {
           px="2"
           key={queryItem.isbn}
           display="block"
+          data-testid="result-link"
           onClick={(e) => handlePushToProduct(e, queryItem)}
           _hover={{ textDecor: "none", bg: "primary", color: "#fff" }}
         >

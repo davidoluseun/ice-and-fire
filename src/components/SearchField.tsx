@@ -14,11 +14,12 @@ const SearchField = ({ searchValue, onSearch }: SearchFieldProps) => {
   return (
     <FormControl id="search" maxW="300px" mr="4">
       <VisuallyHidden>
-        <FormLabel>Search books...</FormLabel>
+        <FormLabel htmlFor="search">Search books...</FormLabel>
       </VisuallyHidden>
       <Input
         value={searchValue}
         type="search"
+        id="search"
         borderRadius="full"
         autoComplete="off"
         placeholder="Search books..."

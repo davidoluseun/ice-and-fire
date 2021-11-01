@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen, within } from "./utils/custom-render";
+import userEvent from "@testing-library/user-event";
 import { server, rest } from "./utils/testServer";
 import { fetchBooks } from "../utils/fetchBooks";
 import { fetchCharacters } from "../utils/fetchCharacters";
@@ -86,6 +87,50 @@ describe("<App />", () => {
         expect(book.authors.length).toBeGreaterThanOrEqual(1);
         expect(book).toHaveProperty("released");
       });
+    });
+  });
+
+  describe("searching the list of books on the UI", () => {
+    it("should search for books using name parameter", async () => {
+      server.use(
+        rest.get(bookUrl, (req, res, ctx) => {
+          const page = Number(req.url.searchParams.get("page"));
+          const pageSize = Number(req.url.searchParams.get("pageSize"));
+
+          return res(
+            ctx.json(getBooks(page, pageSize)),
+            ctx.set("link", bookInitHeaderLink)
+          );
+        })
+      );
+
+      server.use(
+        rest.get(characterUrl, (req, res, ctx) => {
+          const page = Number(req.url.searchParams.get("page"));
+          const pageSize = Number(req.url.searchParams.get("pageSize"));
+
+          return res(
+            ctx.json(getCharacters(page, pageSize)),
+            ctx.set("link", getNextCharactersLink(page))
+          );
+        })
+      );
+
+      render(<App />);
+
+      const response = await fetchBooks(bookInitUrl);
+      await response.json();
+
+      await fetchCharacters();
+
+      const searchField = screen.getByLabelText("Search books...");
+      const resultBox = screen.getByTestId("result-box");
+
+      userEvent.type(searchField, "Book 1");
+      expect(searchField).toHaveValue("Book 1");
+
+      const text = within(resultBox).getByTestId("result-link").textContent;
+      expect(text).toBe("Book 1");
     });
   });
 });
