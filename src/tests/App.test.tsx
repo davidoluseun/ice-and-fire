@@ -24,32 +24,34 @@ const bookNextHeaderLink = `<${bookUrl}?page=1&pageSize=6>; rel="prev",
 const characterUrl = "https://www.anapioficeandfire.com/api/characters";
 
 describe("<App />", () => {
+  beforeEach(() => {
+    server.use(
+      rest.get(bookUrl, (req, res, ctx) => {
+        const page = Number(req.url.searchParams.get("page"));
+        const pageSize = Number(req.url.searchParams.get("pageSize"));
+
+        return res(
+          ctx.json(getBooks(page, pageSize)),
+          ctx.set("link", bookInitHeaderLink)
+        );
+      })
+    );
+
+    server.use(
+      rest.get(characterUrl, (req, res, ctx) => {
+        const page = Number(req.url.searchParams.get("page"));
+        const pageSize = Number(req.url.searchParams.get("pageSize"));
+
+        return res(
+          ctx.json(getCharacters(page, pageSize)),
+          ctx.set("link", getNextCharactersLink(page))
+        );
+      })
+    );
+  });
+
   describe("rendering the list of books available on Ice and Fire API", () => {
     it("should render the list of books having publisher, name, isbn, authors and end date", async () => {
-      server.use(
-        rest.get(bookUrl, (req, res, ctx) => {
-          const page = Number(req.url.searchParams.get("page"));
-          const pageSize = Number(req.url.searchParams.get("pageSize"));
-
-          return res(
-            ctx.json(getBooks(page, pageSize)),
-            ctx.set("link", bookInitHeaderLink)
-          );
-        })
-      );
-
-      server.use(
-        rest.get(characterUrl, (req, res, ctx) => {
-          const page = Number(req.url.searchParams.get("page"));
-          const pageSize = Number(req.url.searchParams.get("pageSize"));
-
-          return res(
-            ctx.json(getCharacters(page, pageSize)),
-            ctx.set("link", getNextCharactersLink(page))
-          );
-        })
-      );
-
       render(<App />);
 
       expect(screen.getByTestId("init-spinner")).toBeInTheDocument();
@@ -92,30 +94,6 @@ describe("<App />", () => {
 
   describe("searching the list of books on the UI", () => {
     it("should search for books using name parameter", async () => {
-      server.use(
-        rest.get(bookUrl, (req, res, ctx) => {
-          const page = Number(req.url.searchParams.get("page"));
-          const pageSize = Number(req.url.searchParams.get("pageSize"));
-
-          return res(
-            ctx.json(getBooks(page, pageSize)),
-            ctx.set("link", bookInitHeaderLink)
-          );
-        })
-      );
-
-      server.use(
-        rest.get(characterUrl, (req, res, ctx) => {
-          const page = Number(req.url.searchParams.get("page"));
-          const pageSize = Number(req.url.searchParams.get("pageSize"));
-
-          return res(
-            ctx.json(getCharacters(page, pageSize)),
-            ctx.set("link", getNextCharactersLink(page))
-          );
-        })
-      );
-
       render(<App />);
 
       const response = await fetchBooks(bookInitUrl);
