@@ -197,5 +197,39 @@ describe("<App />", () => {
       const text = within(resultBox).getByTestId("result-link").textContent;
       expect(text).toBe(books[0].name);
     });
+
+    it("should search for books using authors parameter", async () => {
+      render(<App />);
+
+      const response = await fetchBooks(bookInitUrl);
+      const books = await response.json();
+
+      await fetchCharacters();
+
+      const searchField = screen.getByLabelText("Search books...");
+      const resultBox = screen.getByTestId("result-box");
+      const filterField = screen.getByRole("combobox");
+
+      expect(resultBox).not.toBeVisible();
+
+      userEvent.selectOptions(filterField, "authors");
+
+      userEvent.type(searchField, books[0].authors[0]);
+      expect(searchField).toHaveValue(books[0].authors[0]);
+
+      expect(resultBox).toBeVisible();
+
+      const matchBooks = books.filter(
+        (book: BookTypes) => book.publisher === books[0].authors[0]
+      );
+
+      const resultLinks = screen.getAllByTestId("result-link").map((link) => ({
+        name: link.textContent,
+      }));
+
+      matchBooks.forEach((book: BookTypes, i: number) => {
+        expect(book["name"]).toBe(resultLinks[i]["name"]);
+      });
+    });
   });
 });
