@@ -28,15 +28,15 @@ export const searchHelper = (paramsObj: searchHelperTypes) => {
     let key: CharacterKeys = "culture";
     if (filter === "characters") key = "name";
 
-    const character = characters.find(
+    const queryCharacters = characters.filter(
       (character) => character[key].toLowerCase() === searchQuery.toLowerCase()
     );
 
-    if (character)
-      return books.filter((book) => {
-        return character.books.some((b) => b === book.url);
-      });
-    else return [];
+    return books.filter((book) =>
+      queryCharacters.some((queryCharacter) =>
+        queryCharacter.books.some((bookUrl) => bookUrl === book.url)
+      )
+    );
   }
 
   return books.filter((book) =>
