@@ -94,7 +94,7 @@ describe("<App />", () => {
       render(<App />);
 
       const response = await fetchBooks(bookInitUrl);
-      await response.json();
+      const books = await response.json();
 
       await fetchCharacters();
 
@@ -103,13 +103,13 @@ describe("<App />", () => {
 
       expect(resultBox).not.toBeVisible();
 
-      userEvent.type(searchField, "Book 1");
-      expect(searchField).toHaveValue("Book 1");
+      userEvent.type(searchField, books[0].name);
+      expect(searchField).toHaveValue(books[0].name);
 
       expect(resultBox).toBeVisible();
 
       const text = within(resultBox).getByTestId("result-link").textContent;
-      expect(text).toBe("Book 1");
+      expect(text).toBe(books[0].name);
     });
 
     it("should search for books using publisher parameter", async () => {
