@@ -63,26 +63,22 @@ describe("<App />", () => {
 
       expect(screen.queryByTestId("init-spinner")).not.toBeInTheDocument();
 
-      function getRenderedBooks() {
-        return screen.getAllByTestId("book").map((book) => ({
-          publisher: within(book).getByTestId("publisher").textContent,
-          name: within(book).getByTestId("name").textContent,
-          isbn: within(book).getByTestId("isbn").textContent,
-          authors: within(book)
-            .getAllByTestId("author")
-            .map((authorName) => ({
-              authorName: within(authorName).getByTestId("author-name")
-                .textContent,
-            })),
-          released: within(book).getByTestId("released").textContent,
-        }));
-      }
+      const renderedBooks = screen.getAllByTestId("book").map((book) => ({
+        publisher: within(book).getByTestId("publisher").textContent,
+        name: within(book).getByTestId("name").textContent,
+        isbn: within(book).getByTestId("isbn").textContent,
+        authors: within(book)
+          .getAllByTestId("author")
+          .map((authorName) => ({
+            authorName: within(authorName).getByTestId("author-name")
+              .textContent,
+          })),
+        released: within(book).getByTestId("released").textContent,
+      }));
 
-      const books = getRenderedBooks();
+      expect(renderedBooks.length).toBe(6);
 
-      expect(books.length).toBe(6);
-
-      books.forEach((book) => {
+      renderedBooks.forEach((book) => {
         expect(book).toHaveProperty("publisher");
         expect(book).toHaveProperty("isbn");
         expect(book).toHaveProperty("name");
