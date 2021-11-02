@@ -1,5 +1,5 @@
 import { Box, Grid } from "@chakra-ui/react";
-import BookLayout from "./BookLayout";
+import BookLayout from "../common/BookLayout";
 import Error from "./Error";
 
 type BookListsProps = {

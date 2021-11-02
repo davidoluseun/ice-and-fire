@@ -1,14 +1,14 @@
 import * as React from "react";
 import { Box } from "@chakra-ui/react";
 import { useParams, Redirect } from "react-router-dom";
-import { AppContext } from "./AppContext";
-import BookLayout from "./BookLayout";
+import { AppContext } from "../common/AppContext";
+import BookLayout from "../common/BookLayout";
 
 type useParamsTypes = {
   isbn: string;
 };
 
-const SearchBook = () => {
+const Book = () => {
   const { appState } = React.useContext(AppContext);
 
   const { isbn } = useParams<useParamsTypes>();
@@ -24,4 +24,4 @@ const SearchBook = () => {
   );
 };
 
-export default SearchBook;
+export default Book;

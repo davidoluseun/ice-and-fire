@@ -2,9 +2,9 @@ import * as React from "react";
 import { Flex, Box } from "@chakra-ui/react";
 import SearchField from "./SearchField";
 import FilterField from "./FilterField";
-import { AppContext } from "./AppContext";
+import { AppContext } from "../common/AppContext";
 import SearchResult from "./SearchResult";
-import { searchHelper } from "../utils/searchHelper";
+import { searchHelper } from "../../utils/searchHelper";
 
 const Header = () => {
   const { appState } = React.useContext(AppContext);

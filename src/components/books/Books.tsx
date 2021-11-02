@@ -5,10 +5,10 @@ import BookLists from "./BookLists";
 import Loading from "./Loading";
 import InitialLoading from "./InitialLoading";
 import Error from "./Error";
-import { AppContext } from "./AppContext";
-import { fetchBooks } from "../utils/fetchBooks";
-import { parseHeaders } from "../utils/parseHeaders";
-import { fetchCharacters } from "../utils/fetchCharacters";
+import { AppContext } from "../common/AppContext"; 
+import { fetchBooks } from "../../utils/fetchBooks";
+import { parseHeaders } from "../../utils/parseHeaders";
+import { fetchCharacters } from "../../utils/fetchCharacters";
 
 const Books = () => {
   const url = "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6";

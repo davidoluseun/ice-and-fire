@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { AppProvider } from "./components/AppContext";
+import { AppProvider } from "./components/common/AppContext";
 import App from "./App";
 
 ReactDOM.render(

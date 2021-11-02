@@ -1,7 +1,7 @@
 import * as React from "react";
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { AppProvider } from "../../components/AppContext";
+import { AppProvider } from "../../components/common/AppContext";
 
 type WrapperProps = {
   children: React.ReactNode;
