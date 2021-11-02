@@ -100,8 +100,12 @@ describe("<App />", () => {
       const searchField = screen.getByLabelText("Search books...");
       const resultBox = screen.getByTestId("result-box");
 
+      expect(resultBox).not.toBeVisible();
+
       userEvent.type(searchField, "Book 1");
       expect(searchField).toHaveValue("Book 1");
+
+      expect(resultBox).toBeVisible();
 
       const text = within(resultBox).getByTestId("result-link").textContent;
       expect(text).toBe("Book 1");
@@ -116,12 +120,17 @@ describe("<App />", () => {
       await fetchCharacters();
 
       const searchField = screen.getByLabelText("Search books...");
+      const resultBox = screen.getByTestId("result-box");
       const filterField = screen.getByRole("combobox");
+
+      expect(resultBox).not.toBeVisible();
 
       userEvent.selectOptions(filterField, "publisher");
 
       userEvent.type(searchField, books[0].publisher);
       expect(searchField).toHaveValue(books[0].publisher);
+
+      expect(resultBox).toBeVisible();
 
       const matchBooks = books.filter(
         (book: BookTypes) => book.publisher === books[0].publisher
@@ -148,10 +157,14 @@ describe("<App />", () => {
       const resultBox = screen.getByTestId("result-box");
       const filterField = screen.getByRole("combobox");
 
+      expect(resultBox).not.toBeVisible();
+
       userEvent.selectOptions(filterField, "isbn");
 
       userEvent.type(searchField, books[0].isbn);
       expect(searchField).toHaveValue(books[0].isbn);
+
+      expect(resultBox).toBeVisible();
 
       const text = within(resultBox).getByTestId("result-link").textContent;
       expect(text).toBe(books[0].name);
