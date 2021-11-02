@@ -110,5 +110,34 @@ describe("<App />", () => {
       const text = within(resultBox).getByTestId("result-link").textContent;
       expect(text).toBe("Book 1");
     });
+
+    it("should search for books using publisher parameter", async () => {
+      render(<App />);
+
+      const response = await fetchBooks(bookInitUrl);
+      const books = await response.json();
+
+      await fetchCharacters();
+
+      const searchField = screen.getByLabelText("Search books...");
+      const filterField = screen.getByRole("combobox");
+
+      userEvent.selectOptions(filterField, "publisher");
+
+      userEvent.type(searchField, books[0].publisher);
+      expect(searchField).toHaveValue(books[0].publisher);
+
+      const matchBooks = books.filter(
+        (book: BookTypes) => book.publisher === books[0].publisher
+      );
+
+      const resultLinks = screen.getAllByTestId("result-link").map((link) => ({
+        name: link.textContent,
+      }));
+
+      matchBooks.forEach((book: BookTypes, i: number) => {
+        expect(book["name"]).toBe(resultLinks[i]["name"]);
+      });
+    });
   });
 });

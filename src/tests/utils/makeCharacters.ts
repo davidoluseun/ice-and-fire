@@ -17,8 +17,8 @@ const makeCharacters = (n?: number) => {
 
   for (let i = 0; i < num; i++) {
     characters.push({
-      url: `https://www.anapioficeandfire.com/api/characters/${i}`,
-      name: `Character ${i}`,
+      url: `https://www.anapioficeandfire.com/api/characters/${i + 1}`,
+      name: `Character ${i + 1}`,
       gender: ["Male", "Female"][Math.floor(Math.random() * 2)],
       culture: cultures[Math.floor(Math.random() * cultures.length)],
       born: "",
