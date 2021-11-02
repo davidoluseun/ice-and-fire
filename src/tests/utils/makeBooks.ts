@@ -20,7 +20,7 @@ const makeBooks = (n?: number) => {
     books.push({
       url: `https://www.anapioficeandfire.com/api/books/${i + 1}`,
       name: `Book ${i + 1}`,
-      isbn: Math.floor(Math.random() * 100000000000000),
+      isbn: `${Math.floor(Math.random() * 100000000000000)}`,
       authors: [authors[Math.floor(Math.random() * authors.length)]],
       numberOfPages: Math.ceil(Math.random() * (800 - 200) + 200),
       publisher: publishers[Math.floor(Math.random() * publishers.length)],

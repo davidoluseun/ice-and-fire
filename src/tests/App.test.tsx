@@ -139,5 +139,26 @@ describe("<App />", () => {
         expect(book["name"]).toBe(resultLinks[i]["name"]);
       });
     });
+
+    it("should search for books using isbn parameter", async () => {
+      render(<App />);
+
+      const response = await fetchBooks(bookInitUrl);
+      const books = await response.json();
+
+      await fetchCharacters();
+
+      const searchField = screen.getByLabelText("Search books...");
+      const resultBox = screen.getByTestId("result-box");
+      const filterField = screen.getByRole("combobox");
+
+      userEvent.selectOptions(filterField, "isbn");
+
+      userEvent.type(searchField, books[0].isbn);
+      expect(searchField).toHaveValue(books[0].isbn);
+
+      const text = within(resultBox).getByTestId("result-link").textContent;
+      expect(text).toBe(books[0].name);
+    });
   });
 });
