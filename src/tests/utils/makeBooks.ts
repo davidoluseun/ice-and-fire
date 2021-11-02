@@ -1,12 +1,12 @@
 import moment from "moment";
 
-function getRandomArray(array: string[], count: number) {
+const getRandomArray = (array: string[], count: number) => {
   const [_head, ...arrayCopy] = array;
   return new Array(count).fill(0).map(() => {
     const index = Math.floor(Math.random() * arrayCopy.length);
     return arrayCopy.splice(index, 1)[0];
   });
-}
+};
 
 const authors = ["Author 1", "Author 2", "Author 3"];
 const publishers = ["Publisher 1", "Publisher 2", "Publisher 3", "Publisher 4"];
