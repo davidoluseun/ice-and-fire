@@ -271,5 +271,46 @@ describe("<App />", () => {
         expect(book["name"]).toBe(resultLinks[i]["name"]);
       });
     });
+
+    it("should search for books using characters culture", async () => {
+      render(<App />);
+
+      const response = await fetchBooks(bookInitUrl);
+      const books = await response.json();
+
+      const characters = await fetchCharacters();
+
+      const searchField = screen.getByLabelText("Search books...");
+      const resultBox = screen.getByTestId("result-box");
+      const filterField = screen.getByRole("combobox");
+
+      expect(resultBox).not.toBeVisible();
+
+      userEvent.selectOptions(filterField, "culture");
+
+      userEvent.type(searchField, characters[0].culture);
+      expect(searchField).toHaveValue(characters[0].culture);
+
+      expect(resultBox).toBeVisible();
+
+      const matchCharacters = characters.filter(
+        (character: CharacterTypes) =>
+          character.culture === characters[0].culture
+      );
+
+      const matchBooks = books.filter((book: BookTypes) =>
+        matchCharacters.some((matchCharacter: CharacterTypes) =>
+          matchCharacter.books.some((bookUrl) => bookUrl === book.url)
+        )
+      );
+
+      const resultLinks = screen.getAllByTestId("result-link").map((link) => ({
+        name: link.textContent,
+      }));
+
+      matchBooks.forEach((book: BookTypes, i: number) => {
+        expect(book["name"]).toBe(resultLinks[i]["name"]);
+      });
+    });
   });
 });
