@@ -1,3 +1,5 @@
+import moment from "moment";
+
 function getRandomArray(array: string[], count: number) {
   const [_head, ...arrayCopy] = array;
   return new Array(count).fill(0).map(() => {
@@ -26,7 +28,7 @@ const makeBooks = (n?: number) => {
       publisher: publishers[Math.floor(Math.random() * publishers.length)],
       country: "United States",
       mediaType: mediaTypes[Math.floor(Math.random() * mediaTypes.length)],
-      released: "",
+      released: `${moment("2021-11-02").add(-i, "years").toDate()}`,
       characters: getRandomArray(characters, 4),
       povCharacters: getRandomArray(characters, 2),
     });

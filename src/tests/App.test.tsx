@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, within } from "./utils/custom-render";
 import userEvent from "@testing-library/user-event";
+import moment from "moment";
 import { server, rest } from "./utils/testServer";
 import { fetchBooks } from "../utils/fetchBooks";
 import { fetchCharacters } from "../utils/fetchCharacters";
@@ -163,6 +164,33 @@ describe("<App />", () => {
 
       userEvent.type(searchField, books[0].isbn);
       expect(searchField).toHaveValue(books[0].isbn);
+
+      expect(resultBox).toBeVisible();
+
+      const text = within(resultBox).getByTestId("result-link").textContent;
+      expect(text).toBe(books[0].name);
+    });
+
+    it("should search for books using end date parameter", async () => {
+      render(<App />);
+
+      const response = await fetchBooks(bookInitUrl);
+      const books = await response.json();
+
+      await fetchCharacters();
+
+      const searchField = screen.getByLabelText("Search books...");
+      const resultBox = screen.getByTestId("result-box");
+      const filterField = screen.getByRole("combobox");
+
+      expect(resultBox).not.toBeVisible();
+
+      userEvent.selectOptions(filterField, "released");
+
+      const date = moment(books[0].released).format("YYYY-MM-DD");
+
+      userEvent.type(searchField, date);
+      expect(searchField).toHaveValue(date);
 
       expect(resultBox).toBeVisible();
 
