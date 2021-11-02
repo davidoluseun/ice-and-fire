@@ -4,11 +4,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 `/src` contains all the development directories and files for the app.
 
-`/src/components` contains the components files
+`/src/components` contains the components directories and files
 
 `/src/images` contains the images files
 
-`tests` contains the test files. (As at now there are no test files)
+`/src/tests` contains the test files.
 
 ## Available Scripts
 
