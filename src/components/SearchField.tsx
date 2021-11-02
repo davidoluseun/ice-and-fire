@@ -12,7 +12,12 @@ type SearchFieldProps = {
 
 const SearchField = ({ searchValue, onSearch }: SearchFieldProps) => {
   return (
-    <FormControl id="search" maxW="300px" mr="4">
+    <FormControl
+      mr="4"
+      id="search"
+      maxW={{ sm: "323px" }}
+      mb={{ base: "4", sm: "0" }}
+    >
       <VisuallyHidden>
         <FormLabel htmlFor="search">Search books...</FormLabel>
       </VisuallyHidden>

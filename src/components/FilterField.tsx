@@ -14,7 +14,12 @@ const FilterField = ({ onFilter }: FilterFieldProps) => {
   };
 
   return (
-    <FormControl id="filter" maxW="400px" display="flex" alignItems="center">
+    <FormControl
+      id="filter"
+      display="flex"
+      alignItems="center"
+      maxW={{ sm: "400px" }}
+    >
       <FormLabel minW="65px">Filter by:</FormLabel>
       <Select value={selectValue} borderRadius="full" onChange={handleChange}>
         <option value="publisher">Publisher</option>

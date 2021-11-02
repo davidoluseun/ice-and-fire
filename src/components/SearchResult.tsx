@@ -24,10 +24,10 @@ const SearchResult = ({ queryItems, onClearQuery }: SearchResultProps) => {
     <Box
       bg="#fff"
       mt="1"
-      w={{ base: "100%", sm: "400px" }}
+      w={{ base: "80%", sm: "400px" }}
       maxH="400px"
       overflowY="auto"
-      top="65px"
+      top={{ base: "92%", sm: "70px" }}
       borderRadius="md"
       position="absolute"
       data-testid="result-box"

@@ -37,6 +37,8 @@ const Header = () => {
         p="5"
         bg="#fff"
         borderRadius="md"
+        position="relative"
+        direction={{ base: "column", sm: "row" }}
         boxShadow="0px 0px 2px rgba(0, 0, 0, .2)"
       >
         <SearchField searchValue={searchQuery} onSearch={handleSearch} />
