@@ -25,7 +25,9 @@ const bookNextHeaderLink = `<${bookUrl}?page=1&pageSize=6>; rel="prev",
 const characterUrl = "https://www.anapioficeandfire.com/api/characters";
 
 describe("<App />", () => {
-  beforeEach(() => {
+  let response: Response, books: BookTypes[], characters: CharacterTypes[];
+
+  beforeEach(async () => {
     server.use(
       rest.get(bookUrl, (req, res, ctx) => {
         const page = Number(req.url.searchParams.get("page"));
@@ -49,21 +51,21 @@ describe("<App />", () => {
         );
       })
     );
+
+    render(<App />);
+
+    expect(screen.getByTestId("init-spinner")).toBeInTheDocument();
+
+    response = await fetchBooks(bookInitUrl);
+    books = await response.json();
+
+    characters = await fetchCharacters();
+
+    expect(screen.queryByTestId("init-spinner")).not.toBeInTheDocument();
   });
 
   describe("rendering the list of books available on Ice and Fire API", () => {
     it("should render the list of books having publisher, name, isbn, authors and end date", async () => {
-      render(<App />);
-
-      expect(screen.getByTestId("init-spinner")).toBeInTheDocument();
-
-      const response = await fetchBooks(bookInitUrl);
-      const books = await response.json();
-
-      await fetchCharacters();
-
-      expect(screen.queryByTestId("init-spinner")).not.toBeInTheDocument();
-
       const renderedBooks = screen.getAllByTestId("book").map((book) => ({
         publisher: within(book).getByTestId("publisher").textContent,
         name: within(book).getByTestId("name").textContent,
@@ -96,81 +98,58 @@ describe("<App />", () => {
   });
 
   describe("searching the list of books on the UI", () => {
-    it("should search for books using name parameter", async () => {
-      render(<App />);
+    let searchField: HTMLElement,
+      resultBox: HTMLElement,
+      filterField: HTMLElement,
+      searchQuery: string;
 
-      const response = await fetchBooks(bookInitUrl);
-      const books = await response.json();
-
-      await fetchCharacters();
-
-      const searchField = screen.getByLabelText("Search books...");
-      const resultBox = screen.getByTestId("result-box");
+    beforeEach(async () => {
+      searchField = screen.getByLabelText("Search books...");
+      resultBox = screen.getByTestId("result-box");
+      filterField = screen.getByRole("combobox");
 
       expect(resultBox).not.toBeVisible();
+    });
 
-      userEvent.type(searchField, books[0].name);
-      expect(searchField).toHaveValue(books[0].name);
+    it("should search for books using name parameter", async () => {
+      searchQuery = books[0].name;
+
+      userEvent.type(searchField, searchQuery);
+      expect(searchField).toHaveValue(searchQuery);
 
       expect(resultBox).toBeVisible();
 
       const text = within(resultBox).getByTestId("result-link").textContent;
-      expect(text).toBe(books[0].name);
+      expect(text).toBe(searchQuery);
     });
 
     it("should search for books using publisher parameter", async () => {
-      render(<App />);
-
-      const response = await fetchBooks(bookInitUrl);
-      const books = await response.json();
-
-      await fetchCharacters();
-
-      const searchField = screen.getByLabelText("Search books...");
-      const resultBox = screen.getByTestId("result-box");
-      const filterField = screen.getByRole("combobox");
-
-      expect(resultBox).not.toBeVisible();
-
       userEvent.selectOptions(filterField, "publisher");
+      searchQuery = books[0].publisher;
 
-      userEvent.type(searchField, books[0].publisher);
-      expect(searchField).toHaveValue(books[0].publisher);
+      userEvent.type(searchField, searchQuery);
+      expect(searchField).toHaveValue(searchQuery);
 
       expect(resultBox).toBeVisible();
 
-      const matchBooks = books.filter(
-        (book: BookTypes) => book.publisher === books[0].publisher
-      );
+      const matchBooks = books.filter((book) => book.publisher === searchQuery);
 
       const resultLinks = screen.getAllByTestId("result-link").map((link) => ({
         name: link.textContent,
       }));
 
       expect(matchBooks.length).toBe(resultLinks.length);
-      matchBooks.forEach((book: BookTypes, i: number) => {
-        expect(book["name"]).toBe(resultLinks[i]["name"]);
-      });
+      matchBooks.forEach((book, i) =>
+        expect(book.name).toBe(resultLinks[i].name)
+      );
     });
 
     it("should search for books using isbn parameter", async () => {
-      render(<App />);
-
-      const response = await fetchBooks(bookInitUrl);
-      const books = await response.json();
-
-      await fetchCharacters();
-
-      const searchField = screen.getByLabelText("Search books...");
-      const resultBox = screen.getByTestId("result-box");
-      const filterField = screen.getByRole("combobox");
-
-      expect(resultBox).not.toBeVisible();
-
       userEvent.selectOptions(filterField, "isbn");
+      searchQuery = books[0].isbn;
 
-      userEvent.type(searchField, books[0].isbn);
-      expect(searchField).toHaveValue(books[0].isbn);
+      userEvent.type(searchField, searchQuery);
+      expect(searchField).toHaveValue(searchQuery);
 
       expect(resultBox).toBeVisible();
 
@@ -179,25 +158,12 @@ describe("<App />", () => {
     });
 
     it("should search for books using end date parameter", async () => {
-      render(<App />);
-
-      const response = await fetchBooks(bookInitUrl);
-      const books = await response.json();
-
-      await fetchCharacters();
-
-      const searchField = screen.getByLabelText("Search books...");
-      const resultBox = screen.getByTestId("result-box");
-      const filterField = screen.getByRole("combobox");
-
-      expect(resultBox).not.toBeVisible();
-
       userEvent.selectOptions(filterField, "released");
 
-      const date = moment(books[0].released).format("YYYY-MM-DD");
+      searchQuery = moment(books[0].released).format("YYYY-MM-DD");
 
-      userEvent.type(searchField, date);
-      expect(searchField).toHaveValue(date);
+      userEvent.type(searchField, searchQuery);
+      expect(searchField).toHaveValue(searchQuery);
 
       expect(resultBox).toBeVisible();
 
@@ -206,28 +172,16 @@ describe("<App />", () => {
     });
 
     it("should search for books using authors parameter", async () => {
-      render(<App />);
-
-      const response = await fetchBooks(bookInitUrl);
-      const books = await response.json();
-
-      await fetchCharacters();
-
-      const searchField = screen.getByLabelText("Search books...");
-      const resultBox = screen.getByTestId("result-box");
-      const filterField = screen.getByRole("combobox");
-
-      expect(resultBox).not.toBeVisible();
-
       userEvent.selectOptions(filterField, "authors");
+      searchQuery = books[0].authors[0];
 
-      userEvent.type(searchField, books[0].authors[0]);
-      expect(searchField).toHaveValue(books[0].authors[0]);
+      userEvent.type(searchField, searchQuery);
+      expect(searchField).toHaveValue(searchQuery);
 
       expect(resultBox).toBeVisible();
 
-      const matchBooks = books.filter((book: BookTypes) =>
-        book.authors.some((author) => author === books[0].authors[0])
+      const matchBooks = books.filter((book) =>
+        book.authors.some((author) => author === searchQuery)
       );
 
       const resultLinks = screen.getAllByTestId("result-link").map((link) => ({
@@ -235,38 +189,26 @@ describe("<App />", () => {
       }));
 
       expect(matchBooks.length).toBe(resultLinks.length);
-      matchBooks.forEach((book: BookTypes, i: number) => {
-        expect(book["name"]).toBe(resultLinks[i]["name"]);
-      });
+      matchBooks.forEach((book, i) =>
+        expect(book.name).toBe(resultLinks[i].name)
+      );
     });
 
     it("should search for books using characters name", async () => {
-      render(<App />);
-
-      const response = await fetchBooks(bookInitUrl);
-      const books = await response.json();
-
-      const characters = await fetchCharacters();
-
-      const searchField = screen.getByLabelText("Search books...");
-      const resultBox = screen.getByTestId("result-box");
-      const filterField = screen.getByRole("combobox");
-
-      expect(resultBox).not.toBeVisible();
-
       userEvent.selectOptions(filterField, "characters");
+      searchQuery = characters[0].name;
 
-      userEvent.type(searchField, characters[0].name);
-      expect(searchField).toHaveValue(characters[0].name);
+      userEvent.type(searchField, searchQuery);
+      expect(searchField).toHaveValue(searchQuery);
 
       expect(resultBox).toBeVisible();
 
       const matchCharacters = characters.filter(
-        (character: CharacterTypes) => character.name === characters[0].name
+        (character) => character.name === searchQuery
       );
 
-      const matchBooks = books.filter((book: BookTypes) =>
-        matchCharacters.some((matchCharacter: CharacterTypes) =>
+      const matchBooks = books.filter((book) =>
+        matchCharacters.some((matchCharacter) =>
           matchCharacter.books.some((bookUrl) => bookUrl === book.url)
         )
       );
@@ -276,39 +218,26 @@ describe("<App />", () => {
       }));
 
       expect(matchBooks.length).toBe(resultLinks.length);
-      matchBooks.forEach((book: BookTypes, i: number) => {
-        expect(book["name"]).toBe(resultLinks[i]["name"]);
-      });
+      matchBooks.forEach((book, i) =>
+        expect(book.name).toBe(resultLinks[i].name)
+      );
     });
 
     it("should search for books using characters culture", async () => {
-      render(<App />);
-
-      const response = await fetchBooks(bookInitUrl);
-      const books = await response.json();
-
-      const characters = await fetchCharacters();
-
-      const searchField = screen.getByLabelText("Search books...");
-      const resultBox = screen.getByTestId("result-box");
-      const filterField = screen.getByRole("combobox");
-
-      expect(resultBox).not.toBeVisible();
-
       userEvent.selectOptions(filterField, "culture");
+      searchQuery = characters[0].culture;
 
-      userEvent.type(searchField, characters[0].culture);
-      expect(searchField).toHaveValue(characters[0].culture);
+      userEvent.type(searchField, searchQuery);
+      expect(searchField).toHaveValue(searchQuery);
 
       expect(resultBox).toBeVisible();
 
       const matchCharacters = characters.filter(
-        (character: CharacterTypes) =>
-          character.culture === characters[0].culture
+        (character) => character.culture === searchQuery
       );
 
-      const matchBooks = books.filter((book: BookTypes) =>
-        matchCharacters.some((matchCharacter: CharacterTypes) =>
+      const matchBooks = books.filter((book) =>
+        matchCharacters.some((matchCharacter) =>
           matchCharacter.books.some((bookUrl) => bookUrl === book.url)
         )
       );
@@ -318,9 +247,9 @@ describe("<App />", () => {
       }));
 
       expect(matchBooks.length).toBe(resultLinks.length);
-      matchBooks.forEach((book: BookTypes, i: number) => {
-        expect(book["name"]).toBe(resultLinks[i]["name"]);
-      });
+      matchBooks.forEach((book, i) =>
+        expect(book.name).toBe(resultLinks[i].name)
+      );
     });
   });
 });
