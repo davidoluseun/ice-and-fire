@@ -219,8 +219,8 @@ describe("<App />", () => {
 
       expect(resultBox).toBeVisible();
 
-      const matchBooks = books.filter(
-        (book: BookTypes) => book.publisher === books[0].authors[0]
+      const matchBooks = books.filter((book: BookTypes) =>
+        book.authors.some((author) => author === books[0].authors[0])
       );
 
       const resultLinks = screen.getAllByTestId("result-link").map((link) => ({
