@@ -141,6 +141,7 @@ describe("<App />", () => {
         name: link.textContent,
       }));
 
+      expect(matchBooks.length).toBe(resultLinks.length);
       matchBooks.forEach((book: BookTypes, i: number) => {
         expect(book["name"]).toBe(resultLinks[i]["name"]);
       });
@@ -227,6 +228,7 @@ describe("<App />", () => {
         name: link.textContent,
       }));
 
+      expect(matchBooks.length).toBe(resultLinks.length);
       matchBooks.forEach((book: BookTypes, i: number) => {
         expect(book["name"]).toBe(resultLinks[i]["name"]);
       });
@@ -267,6 +269,7 @@ describe("<App />", () => {
         name: link.textContent,
       }));
 
+      expect(matchBooks.length).toBe(resultLinks.length);
       matchBooks.forEach((book: BookTypes, i: number) => {
         expect(book["name"]).toBe(resultLinks[i]["name"]);
       });
@@ -308,6 +311,7 @@ describe("<App />", () => {
         name: link.textContent,
       }));
 
+      expect(matchBooks.length).toBe(resultLinks.length);
       matchBooks.forEach((book: BookTypes, i: number) => {
         expect(book["name"]).toBe(resultLinks[i]["name"]);
       });
