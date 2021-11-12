@@ -58,7 +58,7 @@ describe("<App />", () => {
       expect(screen.getByTestId("init-spinner")).toBeInTheDocument();
 
       const response = await fetchBooks(bookInitUrl);
-      await response.json();
+      const books = await response.json();
 
       await fetchCharacters();
 
@@ -77,14 +77,20 @@ describe("<App />", () => {
         released: within(book).getByTestId("released").textContent,
       }));
 
-      expect(renderedBooks.length).toBe(6);
+      expect(renderedBooks.length).toBe(books.length);
 
-      renderedBooks.forEach((book) => {
-        expect(book).toHaveProperty("publisher");
-        expect(book).toHaveProperty("isbn");
-        expect(book).toHaveProperty("name");
-        expect(book.authors.length).toBeGreaterThanOrEqual(1);
-        expect(book).toHaveProperty("released");
+      renderedBooks.forEach((book, i) => {
+        expect(book).toHaveProperty("publisher", books[i].publisher);
+        expect(book).toHaveProperty("isbn", books[i].isbn);
+        expect(book).toHaveProperty("name", books[i].name);
+        expect(book.authors.length).toBe(books[i].authors.length);
+        book.authors.forEach((author, index) =>
+          expect(author.authorName).toBe(books[i].authors[index])
+        );
+        expect(book).toHaveProperty(
+          "released",
+          moment(books[i].released).format("YYYY-MM-DD")
+        );
       });
     });
   });
