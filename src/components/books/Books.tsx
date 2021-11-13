@@ -2,7 +2,7 @@ import * as React from "react";
 import { Box } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import BookLists from "./BookLists";
-import Loading from "./Loading";
+import NextLoading from "./NextLoading";
 import InitialLoading from "./InitialLoading";
 import Error from "./Error";
 import Header from "../header/Header";
@@ -105,7 +105,7 @@ const Books = () => {
                 dataLength={books.length}
                 next={handleFetchNextBooks}
                 hasMore={nextUrl ? true : false}
-                loader={!nextError && <Loading />}
+                loader={!nextError && <NextLoading />}
               >
                 <BookLists
                   books={books}
