@@ -5,7 +5,8 @@ import BookLists from "./BookLists";
 import Loading from "./Loading";
 import InitialLoading from "./InitialLoading";
 import Error from "./Error";
-import { AppContext } from "../common/AppContext"; 
+import Header from "../header/Header";
+import { AppContext } from "../common/AppContext";
 import { fetchBooks } from "../../utils/fetchBooks";
 import { parseHeaders } from "../../utils/parseHeaders";
 import { fetchCharacters } from "../../utils/fetchCharacters";
@@ -14,7 +15,7 @@ const Books = () => {
   const url = "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6";
 
   const { appState, appDispatch } = React.useContext(AppContext);
-  const { books, nextUrl } = appState;
+  const { books, nextUrl, characters } = appState;
   const { length: count } = books;
 
   const [initialLoading, setInitialLoading] = React.useState(false);
@@ -97,18 +98,22 @@ const Books = () => {
               onTryAgain={handleInitialTryAgain}
             />
           ) : (
-            <InfiniteScroll
-              dataLength={books.length}
-              next={handleFetchNextBooks}
-              hasMore={nextUrl ? true : false}
-              loader={!nextError && <Loading />}
-            >
-              <BookLists
-                books={books}
-                onTryAgain={handleNextTryAgain}
-                nextError={nextError}
-              />
-            </InfiniteScroll>
+            <>
+              <Header books={books} characters={characters} />
+              <InfiniteScroll
+                scrollThreshold={1}
+                dataLength={books.length}
+                next={handleFetchNextBooks}
+                hasMore={nextUrl ? true : false}
+                loader={!nextError && <Loading />}
+              >
+                <BookLists
+                  books={books}
+                  onTryAgain={handleNextTryAgain}
+                  nextError={nextError}
+                />
+              </InfiniteScroll>
+            </>
           )}
         </>
       )}

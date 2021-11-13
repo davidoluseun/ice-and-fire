@@ -11,9 +11,10 @@ const BookLayout = ({ book, hasMaxWidth }: BookLayoutProps) => {
     <Box
       p="2"
       bg="#fff"
-      maxW={hasMaxWidth ? "400px" : ""}
       borderRadius="md"
       data-testid="book"
+      id={book.isbn}
+      maxW={hasMaxWidth ? "400px" : ""}
       boxShadow="0px 0px 2px rgba(0, 0, 0, .2)"
     >
       <Flex p="2px">

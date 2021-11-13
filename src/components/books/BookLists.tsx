@@ -12,7 +12,6 @@ const BookLists = ({ books, onTryAgain, nextError }: BookListsProps) => {
   return (
     <Box>
       <Grid
-        mt="5"
         gridGap="6"
         templateColumns={{
           base: "repeat(1, 1fr)",

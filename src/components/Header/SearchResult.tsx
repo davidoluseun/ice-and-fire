@@ -1,6 +1,5 @@
-import * as React from "react";
 import { Box, Link } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
 
 type SearchResultProps = {
   queryItems: BookTypes[];
@@ -8,18 +7,6 @@ type SearchResultProps = {
 };
 
 const SearchResult = ({ queryItems, onClearQuery }: SearchResultProps) => {
-  const history = useHistory();
-
-  const handlePushToProduct = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    queryItem: BookTypes
-  ) => {
-    e.preventDefault();
-
-    onClearQuery();
-    history.push(`/${queryItem.isbn}`);
-  };
-
   return (
     <Box
       bg="#fff"
@@ -37,12 +24,17 @@ const SearchResult = ({ queryItems, onClearQuery }: SearchResultProps) => {
     >
       {queryItems.map((queryItem) => (
         <Link
-          py="1"
-          px="2"
+          p="2"
           key={queryItem.isbn}
           display="block"
+          as={ScrollLink}
+          offset={-24}
+          duration={300}
+          to={queryItem.isbn}
+          smooth={"easeInOutQuint"}
+          activeClass="active"
           data-testid="result-link"
-          onClick={(e) => handlePushToProduct(e, queryItem)}
+          onClick={onClearQuery}
           _hover={{ textDecor: "none", bg: "primary", color: "#fff" }}
         >
           {queryItem.name}
