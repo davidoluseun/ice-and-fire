@@ -4,7 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import BookLists from "./BookLists";
 import NextLoading from "./NextLoading";
 import InitialLoading from "./InitialLoading";
-import Error from "./Error";
+import Error from "../common/Error";
 import Header from "../header/Header";
 import { AppContext } from "../common/AppContext";
 import { fetchBooks } from "../../utils/fetchBooks";
