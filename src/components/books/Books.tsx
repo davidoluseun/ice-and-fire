@@ -2,7 +2,7 @@ import * as React from "react";
 import { Box } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import BookLists from "./BookLists";
-import NextLoading from "./NextLoading";
+import NextLoading from "../common/NextLoading";
 import InitialLoading from "../common/InitialLoading";
 import Error from "../common/Error";
 import Header from "../header/Header";
