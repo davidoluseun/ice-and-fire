@@ -6,7 +6,6 @@ import NextLoading from "../common/NextLoading";
 import InitialLoading from "../common/InitialLoading";
 import Error from "../common/Error";
 import Header from "../header/Header";
-import { AppContext } from "../common/AppContext";
 import { fetchBooks } from "../../utils/fetchBooks";
 import { parseHeaders } from "../../utils/parseHeaders";
 import { fetchCharacters } from "../../utils/fetchCharacters";
@@ -14,9 +13,9 @@ import { fetchCharacters } from "../../utils/fetchCharacters";
 const Books = () => {
   const url = "https://www.anapioficeandfire.com/api/books?page=1&pageSize=6";
 
-  const { appState, appDispatch } = React.useContext(AppContext);
-  const { books, nextUrl, characters } = appState;
-  const { length: count } = books;
+  const [books, setBooks] = React.useState<BookTypes[]>([]);
+  const [characters, setCharacters] = React.useState<CharacterTypes[]>([]);
+  const [nextUrl, setNextUrl] = React.useState("");
 
   const [initialLoading, setInitialLoading] = React.useState(false);
   const [initialError, setInitialError] = React.useState(false);
@@ -31,13 +30,14 @@ const Books = () => {
 
       try {
         const response = await fetchBooks(url);
-        const data = await response.json();
+        const books = await response.json();
         const headerLinks = parseHeaders(response);
 
         const characters = await fetchCharacters();
 
-        const payload = { books: data, nextUrl: headerLinks.next, characters };
-        appDispatch({ type: "FETCH_INIT", payload });
+        setBooks(books);
+        setCharacters(characters);
+        setNextUrl(headerLinks.next);
       } catch (error) {
         setInitialError(true);
       }
@@ -46,10 +46,8 @@ const Books = () => {
       setShouldTryAgain(false);
     };
 
-    if (count <= 0) {
-      fetchInitBooks(url);
-    }
-  }, [appDispatch, count, shouldTryAgain]);
+    fetchInitBooks(url);
+  }, [shouldTryAgain]);
 
   const fetchNextBooks = async (url: string) => {
     setNextLoading(true);
@@ -60,11 +58,8 @@ const Books = () => {
       const headerLinks = parseHeaders(response);
       const data = await response.json();
 
-      const payload = {
-        books: books.concat(data),
-        nextUrl: headerLinks.next,
-      };
-      appDispatch({ type: "FETCH_NEXT_BOOKS", payload });
+      setBooks(books.concat(data));
+      setNextUrl(headerLinks.next);
     } catch (error) {
       setNextError(true);
     }
