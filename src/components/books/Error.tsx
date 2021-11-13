@@ -18,7 +18,7 @@ const Error = ({ onTryAgain, diffText }: ErrorProps) => {
       justify="center"
       boxShadow="0px 0px 2px rgba(0, 0, 0, .2)"
     >
-      <Heading as="h1" fontSize="30px">
+      <Heading as="h1" fontSize="24px">
         Can't connect
       </Heading>
       <Text maxW="470px" mb="4" mt={{ base: "1", sm: "2" }} textAlign="center">
