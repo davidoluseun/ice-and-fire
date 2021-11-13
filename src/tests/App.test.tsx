@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import moment from "moment";
@@ -12,15 +11,10 @@ import App from "../App";
 
 const bookUrl = "https://www.anapioficeandfire.com/api/books";
 const bookInitUrl = `${bookUrl}?page=1&pageSize=6`;
-const bookNextUrl = `${bookUrl}?page=2&pageSize=6`;
 
 const bookInitHeaderLink = `<${bookUrl}?page=2&pageSize=6>; rel="next",
  <${bookUrl}?page=1&pageSize=6>; rel="first",
  <${bookUrl}?page=2&pageSize=6>; rel="last"`;
-
-const bookNextHeaderLink = `<${bookUrl}?page=1&pageSize=6>; rel="prev",
-<${bookUrl}?page=1&pageSize=6>; rel="first",
-<${bookUrl}?page=2&pageSize=6>; rel="last"`;
 
 const characterUrl = "https://www.anapioficeandfire.com/api/characters";
 
