@@ -28,9 +28,7 @@ const SearchField = ({ searchValue, onSearch }: SearchFieldProps) => {
         borderRadius="full"
         autoComplete="off"
         placeholder="Search books..."
-        onChange={(e) => {
-          onSearch(e.currentTarget.value.trimStart());
-        }}
+        onChange={(e) => onSearch(e.currentTarget.value.trimStart())}
       />
     </FormControl>
   );
