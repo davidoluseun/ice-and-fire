@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { act } from "react-dom/test-utils";
 import moment from "moment";
 import { server, rest } from "./utils/testServer";
 import { fetchBooks } from "../utils/fetchBooks";
@@ -50,10 +51,11 @@ describe("<App />", () => {
 
     expect(screen.getByTestId("init-spinner")).toBeInTheDocument();
 
-    response = await fetchBooks(bookInitUrl);
-    books = await response.json();
-
-    characters = await fetchCharacters();
+    await act(async () => {
+      response = await fetchBooks(bookInitUrl);
+      books = await response.json();
+      characters = await fetchCharacters();
+    });
 
     expect(screen.queryByTestId("init-spinner")).not.toBeInTheDocument();
   });
@@ -72,9 +74,7 @@ describe("<App />", () => {
           })),
         released: within(book).getByTestId("released").textContent,
       }));
-
       expect(renderedBooks.length).toBe(books.length);
-
       renderedBooks.forEach((book, i) => {
         expect(book).toHaveProperty("publisher", books[i].publisher);
         expect(book).toHaveProperty("isbn", books[i].isbn);
