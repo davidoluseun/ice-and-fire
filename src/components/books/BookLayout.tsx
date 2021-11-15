@@ -100,7 +100,7 @@ const BookLayout = ({ book, hasMaxWidth }: BookLayoutProps) => {
       </Flex>
       <Flex p="2px">
         <Box fontWeight="semibold" flexBasis="45%">
-          Number of Pages:
+          No. of Pages:
         </Box>
         <Box data-testid="pages" pl="2" flexBasis="55%">
           {book.numberOfPages}
