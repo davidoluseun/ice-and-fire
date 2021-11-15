@@ -28,7 +28,9 @@ const makeBooks = (n?: number) => {
       publisher: publishers[Math.floor(Math.random() * publishers.length)],
       country: "United States",
       mediaType: mediaTypes[Math.floor(Math.random() * mediaTypes.length)],
-      released: `${moment("2021-11-02").add(-i, "years").toDate()}`,
+      released: `${moment(
+        moment("2021-11-02").add(-i, "years").toDate()
+      ).format("YYYY-MM-DD")}`,
       characters: getRandomArray(characters, 4),
       povCharacters: getRandomArray(characters, 2),
     });
