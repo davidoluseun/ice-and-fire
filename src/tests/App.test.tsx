@@ -85,7 +85,7 @@ describe("<App />", () => {
         );
         expect(book).toHaveProperty(
           "released",
-          moment(books[i].released).format("YYYY-MM-DD")
+          moment(books[i].released).format("L")
         );
       });
     });
