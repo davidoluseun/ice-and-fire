@@ -11,7 +11,7 @@ type HeaderProps = {
 };
 
 const Header = ({ books, characters }: HeaderProps) => {
-  let [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [filter, setFilter] = React.useState<BookKeys>("name");
 
   const handleSearch = (query: string) => {
@@ -27,10 +27,8 @@ const Header = ({ books, characters }: HeaderProps) => {
   };
 
   let searchBooks: BookTypes[] = [];
-  if (searchQuery) {
-    searchQuery = searchQuery.trim();
+  if (searchQuery)
     searchBooks = searchHelper({ filter, books, searchQuery, characters });
-  }
 
   return (
     <Flex
