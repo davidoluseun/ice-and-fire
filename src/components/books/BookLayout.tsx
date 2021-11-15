@@ -19,18 +19,18 @@ const BookLayout = ({ book, hasMaxWidth }: BookLayoutProps) => {
     >
       <Flex p="2px">
         <Box fontWeight="semibold" flexBasis="45%">
-          Publisher:
-        </Box>
-        <Box data-testid="publisher" pl="2" flexBasis="55%">
-          {book.publisher}
-        </Box>
-      </Flex>
-      <Flex p="2px">
-        <Box fontWeight="semibold" flexBasis="45%">
           Name:
         </Box>
         <Box data-testid="name" pl="2" flexBasis="55%">
           {book.name}
+        </Box>
+      </Flex>
+      <Flex p="2px">
+        <Box fontWeight="semibold" flexBasis="45%">
+          Publisher:
+        </Box>
+        <Box data-testid="publisher" pl="2" flexBasis="55%">
+          {book.publisher}
         </Box>
       </Flex>
       <Flex p="2px">
