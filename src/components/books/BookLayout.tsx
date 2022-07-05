@@ -79,7 +79,7 @@ const BookLayout = ({ book, hasMaxWidth }: BookLayoutProps) => {
           End Date:
         </Box>
         <Box data-testid="released" pl="2" flexBasis="55%">
-          {moment(book.released).format("YYYY-MM-DD")}
+          {moment(book.released).format("L")}
         </Box>
       </Flex>
       <Flex p="2px">

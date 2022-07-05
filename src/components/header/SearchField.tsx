@@ -8,9 +8,10 @@ import {
 type SearchFieldProps = {
   onSearch: (query: string) => void;
   searchValue: string;
+  filter: BookKeys;
 };
 
-const SearchField = ({ searchValue, onSearch }: SearchFieldProps) => {
+const SearchField = ({ searchValue, onSearch, filter }: SearchFieldProps) => {
   return (
     <FormControl
       mr="4"
@@ -23,7 +24,7 @@ const SearchField = ({ searchValue, onSearch }: SearchFieldProps) => {
       </VisuallyHidden>
       <Input
         value={searchValue}
-        type="search"
+        type={filter !== "released" ? "search" : "date"}
         id="search"
         borderRadius="full"
         autoComplete="off"

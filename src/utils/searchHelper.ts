@@ -12,7 +12,7 @@ export const searchHelper = (paramsObj: searchHelperTypes) => {
 
   if (filter === "released") {
     return books.filter((book) =>
-      moment(book["released"]).isSame(moment(searchQuery).format("YYYY-MM-DD"))
+      moment(moment(book["released"]).format("YYYY-MM-DD")).isSame(searchQuery)
     );
   }
 

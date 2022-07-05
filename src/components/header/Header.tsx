@@ -40,7 +40,7 @@ const Header = ({ books, characters }: HeaderProps) => {
       direction={{ base: "column", sm: "row" }}
       boxShadow="0px 0px 2px rgba(0, 0, 0, .2)"
     >
-      <SearchField searchValue={searchQuery} onSearch={handleSearch} />
+      <SearchField filter={filter} searchValue={searchQuery} onSearch={handleSearch} />
       <FilterField onFilter={handleFilter} />
       <SearchResult queryItems={searchBooks} onClearQuery={handleClearSearch} />
     </Flex>
