@@ -73,5 +73,14 @@ describe("App", () => {
         .should("contain.text", "A Storm of Swords")
         .click();
     });
+
+    it("should search for a book using it authors", () => {
+      cy.get("#filter").select("Authors");
+      cy.get("#search").type("George R. R. Martin");
+      cy.get('[data-testid="search-result"]').should("be.visible");
+      cy.get('[data-testid="search-result"]')
+        .should("contain.text", "A Feast for Crows")
+        .click();
+    });
   });
 });
