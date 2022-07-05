@@ -31,4 +31,20 @@ describe("App", () => {
       cy.get('[data-testid="book"]').should("have.length", 12);
     });
   });
+
+  describe("searching for books", () => {
+    it("should search for a book using it name", () => {
+      cy.get("#search").type("A Game of Thrones");
+      cy.get('[data-testid="search-result"]').should("be.visible");
+      cy.get('[data-testid="search-result"]')
+        .should("contain.text", "A Game of Thrones")
+        .click();
+      cy.window()
+        .its("scrollY")
+        .should(
+          "equal",
+          cy.$$('[data-testid="book"]:nth-child(1)').offset().top - 24
+        );
+    });
+  });
 });
