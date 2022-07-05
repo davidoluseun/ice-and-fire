@@ -64,5 +64,14 @@ describe("App", () => {
         .should("contain.text", "A Clash of Kings")
         .click();
     });
+
+    it("should search for a book using it end date", () => {
+      cy.get("#filter").select("End Date");
+      cy.get("#search").type("2000-10-31");
+      cy.get('[data-testid="search-result"]').should("be.visible");
+      cy.get('[data-testid="search-result"]')
+        .should("contain.text", "A Storm of Swords")
+        .click();
+    });
   });
 });
