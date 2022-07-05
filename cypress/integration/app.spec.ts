@@ -18,5 +18,17 @@ describe("App", () => {
         expect(items[0]).to.contain.text("1996-08-01");
       });
     });
+
+    it("should render 6 more books after scrolling to the last book", () => {
+      cy.get('[data-testid="book"]').eq(5).scrollIntoView();
+      cy.get('[data-testid="next-spinner"]').should("exist");
+      cy.intercept(
+        "GET",
+        "https://www.anapioficeandfire.com/api/books?page=2&pageSize=6"
+      ).as("getBooks");
+      cy.wait("@getBooks");
+      cy.get('[data-testid="next-spinner"]').should("not.exist");
+      cy.get('[data-testid="book"]').should("have.length", 12);
+    });
   });
 });
