@@ -82,5 +82,14 @@ describe("App", () => {
         .should("contain.text", "A Feast for Crows")
         .click();
     });
+
+    it("should search for a book using it characters name", () => {
+      cy.get("#filter").select("Characters Name");
+      cy.get("#search").type("Walder");
+      cy.get('[data-testid="search-result"]').should("be.visible");
+      cy.get('[data-testid="search-result"]')
+        .should("contain.text", "A Game of Thrones")
+        .click();
+    });
   });
 });
