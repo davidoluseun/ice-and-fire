@@ -91,5 +91,14 @@ describe("App", () => {
         .should("contain.text", "A Game of Thrones")
         .click();
     });
+
+    it("should search for a book using it characters culture", () => {
+      cy.get("#filter").select("Characters Culture");
+      cy.get("#search").type("Braavosi");
+      cy.get('[data-testid="search-result"]').should("be.visible");
+      cy.get('[data-testid="search-result"]')
+        .should("contain.text", "A Game of Thrones")
+        .click();
+    });
   });
 });
