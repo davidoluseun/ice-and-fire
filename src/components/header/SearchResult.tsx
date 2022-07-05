@@ -17,7 +17,7 @@ const SearchResult = ({ queryItems, onClearQuery }: SearchResultProps) => {
       top={{ base: "92%", sm: "70px" }}
       borderRadius="md"
       position="absolute"
-      data-testid="result-box"
+      data-testid="search-result"
       display={queryItems.length === 0 ? "none" : "block"}
       border=".5px solid rgba(0, 0, 0, .15)"
       boxShadow="0 1px 2px rgba(0, 0, 0, .15)"

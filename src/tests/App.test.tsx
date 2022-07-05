@@ -99,7 +99,7 @@ describe("<App />", () => {
 
     beforeEach(async () => {
       searchField = screen.getByLabelText("Search books...");
-      resultBox = screen.getByTestId("result-box");
+      resultBox = screen.getByTestId("search-result");
       filterField = screen.getByRole("combobox");
 
       expect(resultBox).not.toBeVisible();
