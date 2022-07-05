@@ -46,5 +46,14 @@ describe("App", () => {
           cy.$$('[data-testid="book"]:nth-child(1)').offset().top - 24
         );
     });
+
+    it("should search for a book using it publisher", () => {
+      cy.get("#filter").select("Publisher");
+      cy.get("#search").type("Dabel Brothers Publishing");
+      cy.get('[data-testid="search-result"]').should("be.visible");
+      cy.get('[data-testid="search-result"]')
+        .should("contain.text", "The Hedge Knight")
+        .click();
+    });
   });
 });
