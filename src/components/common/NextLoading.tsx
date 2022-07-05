@@ -4,7 +4,7 @@ import Spinner from "../../images/spinner.gif";
 const Loading = () => {
   return (
     <Flex align="center" justify="center" mt="3">
-      <Image alt="loading" src={Spinner} />
+      <Image data-testid="next-spinner" alt="loading" src={Spinner} />
     </Flex>
   );
 };

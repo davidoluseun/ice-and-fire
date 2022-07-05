@@ -30,7 +30,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
   },
   "engines": {
     "node": "14.x"
@@ -54,7 +55,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/cypress": "^8.0.2",
     "@types/react-scroll": "^1.8.3",
+    "cypress": "^9.7.0",
     "msw": "^0.35.0"
   }
 }

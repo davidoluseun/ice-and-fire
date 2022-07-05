@@ -25,7 +25,11 @@ const BookLists = ({ books, onTryAgain, nextError }: BookListsProps) => {
       </Grid>
 
       {nextError && (
-        <Error diffText="load more books" onTryAgain={onTryAgain} />
+        <Error
+          onTryAgain={onTryAgain}
+          text="Something went wrong trying to load more books. Please check your internet
+        connection and try again."
+        />
       )}
     </Box>
   );

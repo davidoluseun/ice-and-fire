@@ -17,15 +17,13 @@ const Books = () => {
   const [characters, setCharacters] = React.useState<CharacterTypes[]>([]);
   const [nextUrl, setNextUrl] = React.useState("");
 
-  const [initialLoading, setInitialLoading] = React.useState(false);
+  const [initialLoading, setInitialLoading] = React.useState(true);
   const [initialError, setInitialError] = React.useState(false);
   const [, setNextLoading] = React.useState(false);
   const [nextError, setNextError] = React.useState(false);
-  const [shouldTryAgain, setShouldTryAgain] = React.useState(false);
 
   React.useEffect(() => {
     const fetchInitBooks = async (url: string) => {
-      setInitialLoading(true);
       setInitialError(false);
 
       try {
@@ -43,11 +41,10 @@ const Books = () => {
       }
 
       setInitialLoading(false);
-      setShouldTryAgain(false);
     };
 
-    fetchInitBooks(url);
-  }, [shouldTryAgain]);
+    if (initialLoading) fetchInitBooks(url);
+  }, [initialLoading]);
 
   const fetchNextBooks = async (url: string) => {
     setNextLoading(true);
@@ -74,11 +71,7 @@ const Books = () => {
   };
 
   const handleInitialTryAgain = () => {
-    setShouldTryAgain(true);
-  };
-
-  const handleNextTryAgain = () => {
-    fetchNextBooks(nextUrl);
+    setInitialLoading(true);
   };
 
   return (
@@ -89,8 +82,9 @@ const Books = () => {
         <>
           {initialError ? (
             <Error
-              diffText={"connect to the API endpoint"}
               onTryAgain={handleInitialTryAgain}
+              text="Something went wrong trying to connect to the API endpoint. Please check your internet
+              connection and try again."
             />
           ) : (
             <>
@@ -104,7 +98,7 @@ const Books = () => {
               >
                 <BookLists
                   books={books}
-                  onTryAgain={handleNextTryAgain}
+                  onTryAgain={handleFetchNextBooks}
                   nextError={nextError}
                 />
               </InfiniteScroll>
