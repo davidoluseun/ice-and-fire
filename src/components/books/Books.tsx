@@ -82,8 +82,9 @@ const Books = () => {
         <>
           {initialError ? (
             <Error
-              diffText={"connect to the API endpoint"}
               onTryAgain={handleInitialTryAgain}
+              text="Something went wrong trying to connect to the API endpoint. Please check your internet
+              connection and try again."
             />
           ) : (
             <>
