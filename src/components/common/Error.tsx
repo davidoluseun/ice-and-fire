@@ -16,6 +16,7 @@ const Error = ({ onTryAgain, diffText }: ErrorProps) => {
       direction="column"
       align="center"
       justify="center"
+      data-testid="error"
       boxShadow="0px 0px 2px rgba(0, 0, 0, .2)"
     >
       <Heading as="h1" fontSize="24px">
