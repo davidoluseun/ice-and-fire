@@ -55,5 +55,14 @@ describe("App", () => {
         .should("contain.text", "The Hedge Knight")
         .click();
     });
+
+    it("should search for a book using it isbn", () => {
+      cy.get("#filter").select("ISBN");
+      cy.get("#search").type("978-0553108033");
+      cy.get('[data-testid="search-result"]').should("be.visible");
+      cy.get('[data-testid="search-result"]')
+        .should("contain.text", "A Clash of Kings")
+        .click();
+    });
   });
 });
