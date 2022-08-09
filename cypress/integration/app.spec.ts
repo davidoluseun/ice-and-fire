@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 describe("App", () => {
   beforeEach(() => {
     cy.visit("/");
@@ -15,7 +17,7 @@ describe("App", () => {
         expect(items[0]).to.contain.text("A Game of Thrones");
         expect(items[0]).to.contain.text("978-0553103540");
         expect(items[0]).to.contain.text("George R. R. Martin");
-        expect(items[0]).to.contain.text("1996-08-01");
+        expect(items[0]).to.contain.text(moment("1996-08-01").format("L"));
       });
     });
 
